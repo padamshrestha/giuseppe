@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>giuseppe by smartive</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">giuseppe</h1>
+      <h2 class="project-tagline">A controller routing system for expressJS with TypeScript decorators and annotations</h2>
+      <a href="https://github.com/smartive/giuseppe" class="btn">View on GitHub</a>
+      <a href="https://github.com/smartive/giuseppe/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/smartive/giuseppe/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <p><img src="https://cloud.githubusercontent.com/assets/292951/14691860/f363e562-0753-11e6-89df-aab95645084f.png" alt="giuseppe"></p>
+
+<p>giuseppe [Italian: dʒuˈzɛppe] is a controller routing system for <a href="http://expressjs.com/">Express</a> using <a href="https://www.typescriptlang.org/">TypeScript</a> decorators and annotations named after the great Italian componist Giuseppe Verdi. Like Verdi, it composes things, but not a great piece of musical history! We compose routes for you. giuseppe is dedicated to
+<a href="http://expressjs.com/">Express</a> and depends on it. We were tired of writing all the route registrations by ourselves.</p>
+
+<h5>
+<a id="a-bunch-of-badges" class="anchor" href="#a-bunch-of-badges" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>A bunch of badges</h5>
+
+<p><a href="https://travis-ci.org/smartive/giuseppe"><img src="https://travis-ci.org/smartive/giuseppe.svg" alt="Build Status"></a> <a href="https://www.npmjs.com/package/giuseppe"><img src="https://img.shields.io/npm/v/giuseppe.svg?maxAge=3600" alt="npm"></a> <a href="https://coveralls.io/github/smartive/giuseppe"><img src="https://img.shields.io/coveralls/smartive/giuseppe.svg?maxAge=3600" alt="Coverage status"></a></p>
+
+<h2>
+<a id="table-of-contents" class="anchor" href="#table-of-contents" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Table of contents</h2>
+
+<ul>
+<li><a href="#docs">Docs</a></li>
+<li><a href="#installation">Installation</a></li>
+<li><a href="#basic-usage">Basic usage</a></li>
+<li><a href="#testing">Testing</a></li>
+<li><a href="#contribute">Contribute</a></li>
+<li><a href="#changelog">Changelog</a></li>
+<li><a href="#licence">Licence</a></li>
+</ul>
+
+<h2>
+<a id="docs" class="anchor" href="#docs" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Docs</h2>
+
+<p>This readme will give a short overview over the usable features. For more detailed information,
+please find a more detailed documentation in the <code>docs/</code> folder.</p>
+
+<ul>
+<li><a href="docs/Registration.md">Registration of controllers</a></li>
+<li><a href="docs/Controllers.md">Controllers</a></li>
+<li><a href="docs/Routes.md">Routes</a></li>
+<li><a href="docs/Middleware.md">Middleware</a></li>
+<li><a href="docs/Parameters.md">Parameters</a></li>
+<li><a href="docs/Validators.md">Validators</a></li>
+<li><a href="docs/ErrorHandling.md">Error handling</a></li>
+</ul>
+
+<h2>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installation</h2>
+
+<p>To install this package, simply run</p>
+
+<p><a href="https://nodei.co/npm/giuseppe/"><img src="https://nodei.co/npm/giuseppe.png?downloads=true&amp;stars=true" alt="NPM"></a></p>
+
+<p>If not all <code>typings</code> are installed for giuseppe
+you need to manually install the typings for this package.</p>
+
+<p>The dependend typings are:</p>
+
+<ul>
+<li><code>es6-shim</code></li>
+<li><code>express</code></li>
+<li><code>express-serve-static-core</code></li>
+<li><code>http-status</code></li>
+<li><code>mime</code></li>
+<li><code>node</code></li>
+<li><code>serve-static</code></li>
+</ul>
+
+<p>This package installs the transpiled <code>*.js</code> files instead of <code>*.ts</code> files, since the compiler tries
+to compile them everytime. The declaration files with the JSDocs are provided aswell so your 
+autocomplete does work as it should.</p>
+
+<h2>
+<a id="basic-usage" class="anchor" href="#basic-usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Basic usage</h2>
+
+<p>To start with a very simple "ping-pong" example, just use the following lines of code (app.ts):</p>
+
+<div class="highlight highlight-source-ts"><pre><span class="pl-k">import</span> {Controller, Get, registerControllers} <span class="pl-k">from</span> <span class="pl-s">'giuseppe'</span>;
+<span class="pl-k">import</span> express <span class="pl-k">=</span> require(<span class="pl-s">'express'</span>);
+
+@Controller()
+<span class="pl-k">class</span> <span class="pl-en">PingPongController</span> {
+
+    @<span class="pl-en">Get</span>('<span class="pl-v">ping</span>')
+    <span class="pl-k">public</span> <span class="pl-en">ping</span>(): <span class="pl-k">any</span> {
+        <span class="pl-k">return</span> {ping: <span class="pl-s">'pong'</span>};
+    }
+
+}
+
+<span class="pl-k">let</span> <span class="pl-v">app</span> = express();
+
+app.use(registerControllers(<span class="pl-s">'/api'</span>));
+
+app.listen(<span class="pl-c1">8080</span>, () <span class="pl-k">=&gt;</span> {
+    console.log(<span class="pl-s">'Up and running on port 8080'</span>);
+});</pre></div>
+
+<p>If you run this basic example, the pingpong controller will be registered to the route
+<code>/api/ping</code> since no controller route prefix is given.</p>
+
+<p>Now you clearly do not want to code all your controllers in your <code>app.ts</code>. You can decorate any
+class you want, the only condition is, that the class is loaded before the <code>registerControllers</code>
+function is called.</p>
+
+<p><code>controllers.ts</code>:</p>
+
+<div class="highlight highlight-source-ts"><pre><span class="pl-k">import</span> {Controller, Get, Query} <span class="pl-k">from</span> <span class="pl-s">'giuseppe'</span>;
+
+@Controller()
+<span class="pl-k">export</span> <span class="pl-k">class</span> <span class="pl-en">PingPongController</span> {
+
+    @<span class="pl-en">Get</span>('<span class="pl-v">ping</span>')
+    <span class="pl-k">public</span> <span class="pl-en">ping</span>(): <span class="pl-k">any</span> {
+        <span class="pl-k">return</span> {ping: <span class="pl-s">'pong'</span>};
+    }
+
+}
+
+@Controller(<span class="pl-s">'echo'</span>)
+<span class="pl-k">export</span> <span class="pl-k">class</span> <span class="pl-en">EchoController</span> {
+
+    @<span class="pl-en">Get</span>()
+    <span class="pl-k">public</span> <span class="pl-en">ping</span>(@<span class="pl-v">Query</span>('<span class="pl-v">data</span>') data: <span class="pl-k">string</span>): <span class="pl-k">string</span> {
+        <span class="pl-k">return</span> <span class="pl-s">'you gave me: '</span> <span class="pl-k">+</span> data;
+    }
+
+}</pre></div>
+
+<p><code>app.ts</code>:</p>
+
+<div class="highlight highlight-source-ts"><pre><span class="pl-k">import</span> <span class="pl-s">'./controllers'</span>;
+<span class="pl-k">import</span> {registerControllers} <span class="pl-k">from</span> <span class="pl-s">'giuseppe'</span>;
+<span class="pl-k">import</span> express <span class="pl-k">=</span> require(<span class="pl-s">'express'</span>);
+
+<span class="pl-k">let</span> <span class="pl-v">app</span> = express();
+
+app.use(registerControllers(<span class="pl-s">'/api'</span>));
+
+app.listen(<span class="pl-c1">8080</span>, () <span class="pl-k">=&gt;</span> {
+    console.log(<span class="pl-s">'Up and running on port 8080'</span>);
+});</pre></div>
+
+<p>In the example above, the two controllers are registered in expressJS with the routes
+<code>/api/ping</code> and <code>/api/echo</code>. The echo route does listen to a <code>Query</code> parameter with the
+name <code>data</code>. If it's not provided, undefined is injected.</p>
+
+<p>This was a short example of the possiblities of giuseppe. Please find a more detailed version
+of the documentation in the <a href="#docs">links at the start</a> and/or the <code>docs/</code> folder.</p>
+
+<h4>
+<a id="examples" class="anchor" href="#examples" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Examples</h4>
+
+<p>There are many examples located in the <a href="examples">examples</a> folder!
+Please have a look there for various use cases <g-emoji alias="smile" fallback-src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f604.png">😄</g-emoji>.</p>
+
+<h2>
+<a id="testing" class="anchor" href="#testing" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Testing</h2>
+
+<p>If you checked out this repository (yay!) and installed all the dependencies, you
+can run the ninety-ish tests with</p>
+
+<div class="highlight highlight-source-shell"><pre>npm <span class="pl-c1">test</span></pre></div>
+
+<p>If you get any errors, maybe you didn't install the dependencies. There is a <code>npm run bootstrap</code>
+command that will install them for you.</p>
+
+<h2>
+<a id="contribute" class="anchor" href="#contribute" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Contribute</h2>
+
+<p>We're happy if you have any contributions! Every participation counts. Feel free to
+open pull requests, issues or use any other form of contribution. Maybe we'll
+set up a <code>CONTRIBUTING.md</code> file in the future. soon(tm) <g-emoji alias="smile" fallback-src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f604.png">😄</g-emoji>.</p>
+
+<p><a href="https://github.com/smartive/giuseppe/graphs/contributors">Full list of contributors</a></p>
+
+<h2>
+<a id="changelog" class="anchor" href="#changelog" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Changelog</h2>
+
+<p>The changelog is based on <a href="http://keepachangelog.com">keep a changelog</a> and is located here:</p>
+
+<p><a href="CHANGELOG.md">Changelog</a></p>
+
+<h2>
+<a id="licence" class="anchor" href="#licence" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Licence</h2>
+
+<p>This software is licenced under the <a href="LICENSE">MIT</a> licence.</p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/smartive/giuseppe">giuseppe</a> is maintained by <a href="https://github.com/smartive">smartive</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
